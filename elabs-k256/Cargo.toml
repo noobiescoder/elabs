@@ -1,7 +1,11 @@
 [package]
 name = "elabs-k256"
+authors = ["Ade m Ramdani <noobiescoder@gmail.com>"]
+license = "GPL-3.0"
+description = "Elabs K256"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/pentalabs/elabs/tree/master/elabs-k256"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

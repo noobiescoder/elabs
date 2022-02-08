@@ -1,5 +1,6 @@
 [workspace]
 members = [
 	"elabs-k256",
-	"elabs-crypto"
+	"elabs-crypto",
+	"ebox",
 ]

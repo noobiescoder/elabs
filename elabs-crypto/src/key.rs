@@ -1,6 +1,33 @@
-use std::fmt::Display;
+// Copyright (C) 2022 The Elabs Project Authors.
+// This file is part of the Elabs library.
+//
+// The Elabs library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// The Elabs library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with The Elabs library.
+// If not, see <https://www.gnu.org/licenses/>.
 
 use rand::RngCore;
+
+use crate::address::Address;
+
+/// Key traits.
+pub trait Key {
+    /// Return the key as a bytes.
+    fn as_bytes(&self) -> &[u8];
+    /// Return the key to a bytes.
+    fn to_bytes(&self) -> Vec<u8>;
+    /// Return the key to a string.
+    fn to_string(&self) -> String;
+    /// Return the key to a hex string.
+    fn to_hex(&self) -> String;
+}
 
 /// secp256k1 PrivateKey wrapper.
 /// This is a wrapper around a 32-byte private key.
@@ -30,31 +57,44 @@ impl PrivateKey {
 
     /// Create a new private key from a hexadecimal string.
     pub fn from_hex(hex: &str) -> Result<PrivateKey, String> {
+        // if hex has 0x prefix, remove it
+        let hex = if hex.starts_with("0x") {
+            &hex[2..]
+        } else {
+            hex
+        };
+
         let mut ret = [0u8; 32];
         hex::decode_to_slice(hex, &mut ret).map_err(|_| "Invalid hex string")?;
         PrivateKey::from_slice(&ret)
-    }
-
-    /// Get the private key as bytes.
-    pub fn to_bytes(&self) -> [u8; 32] {
-        self.0
     }
 
     /// PublicKey from private key.
     pub fn public_key(&self) -> PublicKey {
         PublicKey::from_private(self)
     }
-}
 
-impl AsRef<[u8]> for PrivateKey {
-    fn as_ref(&self) -> &[u8] {
-        &self.0
+    /// Address from private key.
+    pub fn address(&self) -> Address {
+        Address::from_private_key(self)
     }
 }
 
-impl Display for PrivateKey {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "{}", hex::encode(&self.0))
+impl Key for PrivateKey {
+    fn as_bytes(&self) -> &[u8] {
+        &self.0
+    }
+
+    fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_vec()
+    }
+
+    fn to_string(&self) -> String {
+        hex::encode(self.0)
+    }
+
+    fn to_hex(&self) -> String {
+        self.to_string()
     }
 }
 
@@ -94,22 +134,52 @@ impl PublicKey {
         PublicKey::from_slice(&ret)
     }
 
-    /// Get the public key as bytes.
-    pub fn to_bytes(&self) -> [u8; 65] {
-        self.0
-    }
-
-    /// Get the public key as a hexadecimal string.
-    pub fn to_hex(&self) -> String {
-        hex::encode(&self.0)
+    /// Get Address from public key.
+    pub fn address(&self) -> Address {
+        Address::from_public_key(self)
     }
 }
 
-impl Display for PublicKey {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        for i in 0..65 {
-            write!(f, "{:02x}", self.0[i])?;
-        }
-        Ok(())
+impl Key for PublicKey {
+    fn as_bytes(&self) -> &[u8] {
+        &self.0
+    }
+
+    fn to_bytes(&self) -> Vec<u8> {
+        self.0.to_vec()
+    }
+
+    fn to_string(&self) -> String {
+        hex::encode(self.0)
+    }
+
+    fn to_hex(&self) -> String {
+        self.to_string()
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_private_key() {
+        let sk = PrivateKey::new();
+        assert_eq!(sk.to_string().len(), 64);
+        assert_eq!(sk.to_hex().len(), 64);
+        assert_eq!(sk.to_bytes().len(), 32);
+        assert_eq!(sk.public_key().to_string().len(), 130);
+        assert_eq!(sk.public_key().to_hex().len(), 130);
+        assert_eq!(sk.public_key().to_bytes().len(), 65);
+        assert_eq!(sk.address().to_hex().len(), 42);
+    }
+
+    #[test]
+    fn test_public_key() {
+        let pk = PublicKey::from_private(&PrivateKey::new());
+        assert_eq!(pk.to_string().len(), 130);
+        assert_eq!(pk.to_hex().len(), 130);
+        assert_eq!(pk.to_bytes().len(), 65);
+        assert_eq!(pk.address().to_hex().len(), 42);
     }
 }
