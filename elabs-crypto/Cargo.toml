@@ -2,7 +2,7 @@
 name = "elabs-crypto"
 authors = ["Ade m Ramdani <noobiescoder@gmail.com>"]
 license = "GPL-3.0"
-description = "Elabs Crypto"
+description = "Elabs Crypto: The crypto helper library"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/pentalabs/elabs/tree/master/elabs-crypto"

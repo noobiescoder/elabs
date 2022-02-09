@@ -1,7 +1,11 @@
 [package]
 name = "ebox"
+authors = ["Ade m Ramdani <noobiescoder@gmail.com>"]
+license = "GPL-3.0"
+description = "Ebox: An Solidity cli tool for develop, compile and deploy smart contracts"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/pentalabs/elabs/tree/master/elabs-solc"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
