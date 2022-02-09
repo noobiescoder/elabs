@@ -13,10 +13,24 @@
 // You should have received a copy of the GNU General Public License along with The Elabs library.
 // If not, see <https://www.gnu.org/licenses/>.
 
+//! # Elabs
 //! Elabs-solc is a wrapper around the Solidity compiler.
 //! It is designed to be used as a library, and not as a command line tool.
 //! It will wrap `solc` cli tools, and provide a simple interface
 //! to compile solidity contracts.
+//! ## Example
+//! ```rust
+//! use elabs_solc::Solc;
+//!
+//! fn main() {
+//!    let solc = Solc::new();
+//!    let input_path = "contracts/SimpleStorage.sol";
+//!    let output_path = "artifacts";
+//!    let compile = solc.compile(input_path, output_path);
+//!    let result = compile.unwrap();
+//!    println!("{}", result);
+//! }
+//! ```
 
 use std::process::Command;
 
