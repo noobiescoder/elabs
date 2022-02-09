@@ -23,12 +23,13 @@
 //! use elabs_solc::Solc;
 //!
 //! fn main() {
-//!    let solc = Solc::new();
-//!    let input_path = "contracts/SimpleStorage.sol";
-//!    let output_path = "artifacts";
-//!    let compile = solc.compile(input_path, output_path);
-//!    let result = compile.unwrap();
-//!    println!("{}", result);
+//!	    let solc = Solc::new();
+//!	    let input_path = "contracts/Simple.sol";
+//!	    let output_path = "artifacts";
+//!	    match solc.compile(input_path, output_path, vec![]) {
+//!		    Ok(_) => println!("{} compiled", input_path),
+//!		    Err(e) => panic!("{}", e),
+//!	    }
 //! }
 //! ```
 
@@ -93,7 +94,7 @@ impl Solc {
         &self,
         input_path: &str,
         out_path: &str,
-        opts: Option<&str>,
+        opts: Vec<&str>,
     ) -> Result<String, String> {
         let args = vec!["--bin", "--abi", "--overwrite"];
 
