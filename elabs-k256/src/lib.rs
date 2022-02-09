@@ -15,33 +15,77 @@
 
 //! Elabs-k256 is a wrapper around the tiny_keccak::Keccak::v256() Hasher.
 //! It give a simple interface to use the Hasher.
-//! # Example
+//! # Usage
+//! To use elabs_k256, you need to import the `elabs_k256` crate and use the `k256` or `k256_hash` function.
+//! ```toml
+//! [dependencies]
+//! elabs_k256 = "0.1"
 //! ```
+//! # Example
+//! ```rust
+//! use elabs_k256::k256;
+//!
+//! fn main() {
+//!    let input = "Hello World";
+//!    let hash = k256(input);
+//!    println!("{:?}", hash);
+//! }
+//! ```
+//! ```rust
 //! use elabs_k256::k256_hash;
 //!
 //! fn main() {
-//!    let data = "Hello World";
-//!    let mut hash = [0u8; 32];
-//!    k256_hash(data, &mut hash);
-//!    println!("{:?}", hash);
+//!   let input = "Hello World";
+//!   let mut hash = [0u8; 32];
+//!   k256_hash(input, &mut hash);
+//!   println!("{:?}", hash);
 //! }
 //! ```
 
 use tiny_keccak::{Hasher, Keccak};
 
-/// Compute in place the Keccak-256 hash of the given slice.
-pub fn k256(data: &mut [u8]) {
-    let mut hasher = Keccak::v256();
-    hasher.update(data);
-    hasher.finalize(data);
+/// Compute the keccak256 hash of the input data.
+/// The output is 32 bytes long.
+/// # Arguments
+/// * `data` - The data to hash.
+/// # Return
+/// * The hash of the data.
+/// # Example
+/// ```
+/// use elabs_k256::k256;
+///
+/// fn main() {
+///   let data = "Hello World";
+///   let hash = k256(data);
+///   println!("{:?}", hash);
+/// }
+/// ```
+pub fn k256(data: &str) -> [u8; 32] {
+    let mut hash = [0u8; 32];
+    k256_hash(data, &mut hash);
+    hash
 }
 
 /// Compute the Keccak-256 hash of the given slice.
-/// The result is returned to the given vector.
-pub fn k256_hash(data: &[u8], out: &mut [u8]) {
+/// The result is written directly to the output slice.
+/// # Arguments
+/// * `data` - The data to hash.
+/// * `output` - The output buffer.
+/// # Example
+/// ```
+/// use elabs_k256::k256_hash;
+///
+/// fn main() {
+///  let data = "Hello World";
+///  let mut hash = [0u8; 32];
+///  k256_hash(data, &mut hash);
+///  println!("{:?}", hash);
+/// }
+/// ```
+pub fn k256_hash(data: &str, output: &mut [u8; 32]) {
     let mut hasher = Keccak::v256();
-    hasher.update(data);
-    hasher.finalize(out);
+    hasher.update(data.as_bytes());
+    hasher.finalize(output);
 }
 
 #[cfg(test)]
@@ -50,13 +94,11 @@ mod test {
 
     // Test k256 and k256_hash.
     #[test]
-    fn test_k256() {
-        let mut data = [0u8; 32];
-        let mut out = [0u8; 32];
-
-        // Test with empty data.
-        k256(&mut data);
-        k256_hash(&[0u8; 32], &mut out);
-        assert_eq!(data, out);
+    fn test_hash() {
+        let data = "Hello World";
+        let hash = k256(data);
+        let mut hash2 = [0u8; 32];
+        k256_hash(data, &mut hash2);
+        assert_eq!(hash, hash2);
     }
 }
