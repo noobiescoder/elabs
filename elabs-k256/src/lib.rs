@@ -15,6 +15,17 @@
 
 //! Elabs-k256 is a wrapper around the tiny_keccak::Keccak::v256() Hasher.
 //! It give a simple interface to use the Hasher.
+//! # Example
+//! ```
+//! use elabs_k256::k256_hash;
+//!
+//! fn main() {
+//!    let data = "Hello World";
+//!    let mut hash = [0u8; 32];
+//!    k256_hash(data, &mut hash);
+//!    println!("{:?}", hash);
+//! }
+//! ```
 
 use tiny_keccak::{Hasher, Keccak};
 
