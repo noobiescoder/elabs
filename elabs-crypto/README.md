@@ -13,7 +13,7 @@ elabs-crypto = "0.1"
 use elabs_crypto::*;
 
 fn main() {
-let msg = b"hello world";
+	let msg = b"hello world";
 	let hash = keccak256(msg);
 	let sk = PrivateKey::random();
 	let pk = sk.to_public().unwrap();
