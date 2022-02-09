@@ -1,12 +1,15 @@
-# Elabs Solc
-Elabs Solc is a simple rust wrapper for solc(c++).
-
+# Elabs
+Elabs-solc is a wrapper around the Solidity compiler.
+It is designed to be used as a library, and not as a command line tool.
+It will wrap `solc` cli tools, and provide a simple interface
+to compile solidity contracts.
 ## Usage
+To use the library, you need to import it in your project:
 ```toml
 [dependencies]
-elabs-solc = "0.1.0"
+elabs-solc = "0.1"
 ```
-
+## Example
 ```rust
 use elabs_solc::Solc;
 
