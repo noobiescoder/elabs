@@ -1,6 +1,17 @@
+[package]
+name = "elabs"
+authors = ["Pentalabs Core Dev", "Ade M Ramdani <noobiescoder@gmail.com>"]
+version = "0.1.0"
+edition = "2021"
+license = "GPL-3.0-or-later"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+
+[[bin]]
+path = "bin/elabs/main.rs"
+name = "elabs"
+
 [workspace]
-members = [
-	"elabs-k256",
-	"elabs-crypto",
-	"elabs-solc",
-]
+members = ["elabs-crypto"]
